@@ -1,0 +1,7 @@
+/home/michal/Work/studies/4_term/AISD/laboratoriu_1_test/build/CMakeFiles/install/strip.dir
+/home/michal/Work/studies/4_term/AISD/laboratoriu_1_test/build/CMakeFiles/edit_cache.dir
+/home/michal/Work/studies/4_term/AISD/laboratoriu_1_test/build/CMakeFiles/install.dir
+/home/michal/Work/studies/4_term/AISD/laboratoriu_1_test/build/CMakeFiles/rebuild_cache.dir
+/home/michal/Work/studies/4_term/AISD/laboratoriu_1_test/build/CMakeFiles/laboratoriu_1_test.dir
+/home/michal/Work/studies/4_term/AISD/laboratoriu_1_test/build/CMakeFiles/list_install_components.dir
+/home/michal/Work/studies/4_term/AISD/laboratoriu_1_test/build/CMakeFiles/install/local.dir
