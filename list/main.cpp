@@ -57,14 +57,12 @@ void del(node *& H, int toDel)
         else
         {
             while (p -> next != NULL && p->next->val != toDel)
-            {
                 p = p -> next;
-                
-                if (p -> next != NULL) {
-                    node* p1 = p->next;
-                    p->next = p1->next;
-                    delete p1;
-                }
+
+            if (p -> next != NULL) {
+                node* p1 = p->next;
+                p->next = p1->next;
+                delete p1;
             }
         }
     }
@@ -82,6 +80,7 @@ void del_x2(node*& H, int toDel) {
             node*p = H;
             while (p->next != NULL && p->next->val != toDel)
                 p = p->next;
+
             if (p->next != NULL)
                 deleteListElement(p->next);
         }
