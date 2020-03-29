@@ -6,8 +6,7 @@ struct node {
     node * next;
 };
 
-// dodaje element na początek
-// parametr jako referencja wskaznikowa -> zmiana parametru
+// add element to list
 void add(node*& H, int x) {
     node* p = new node;
     p->val = x;
@@ -15,8 +14,7 @@ void add(node*& H, int x) {
     H = p;
 }
 
-// wyświetla cala liste listę
-// parametr jako referencja -> parametr do odczytu
+// display list
 void show(node *H) {
     node* p = H;
     cout << "Head->";
@@ -28,28 +26,23 @@ void show(node *H) {
     cout << "NULL" << endl;
 }
 
-// usuwa pierwszy element z listy
-// parametr jako referencja wskaznikowa -> zmiana parametru
-// będziemy modyfikować element, usuwamy go
+// remove element from list
 void deleteListElement(node*& H)
 {
     if (H != NULL)
     {
-        // ustawia na poczatek listy
+        // set pointer to top of list
         node* p = H;
-        
-        // przesuwamy na nastepnika, pierwszy el. listy za headerem
+
+        // move header to next element
         H = p->next;
-        
-        // usuwam obiekt
+
+        // delete item
         delete p;
     }
 }
 
-// usuwa podany element z listy
-// parametr jako referencja wskaznikowa -> zmiana parametru
-// będziemy modyfikować element, usuwamy go
-// petla przerywa gdy znajdzie element
+// remove element from list by value
 void del(node *& H, int toDel)
 {
     if (H != NULL)
@@ -77,10 +70,7 @@ void del(node *& H, int toDel)
     }
 }
 
-// usuwa podany element z listy
-// parametr jako referencja wskaznikowa -> zmiana parametru
-// będziemy modyfikować element, usuwamy go
-// petla przerywa gdy znajdzie element
+// remove element from list by value
 void del_x2(node*& H, int toDel) {
     if (H != NULL)
     {
@@ -96,33 +86,6 @@ void del_x2(node*& H, int toDel) {
                 deleteListElement(p->next);
         }
     }
-    
-}
-
-// STOS
-// odklada element na górę stosu
-void push() {
-    
-}
-
-// STOS
-// bierze element z góry stosu
-void pop() {
-    
-}
-
-// STOS
-// sprawdza czy stos jest pusty
-bool isEmpty(node *H) {
-    if (H != NULL)
-        return 0;
-    else
-        return 1;
-}
-
-// STOS
-// sprawdza element na wierzchu stosu
-void onTop() {
     
 }
 
