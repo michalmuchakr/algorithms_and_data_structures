@@ -88,25 +88,7 @@ void del_x2(node*& H, int toDel) {
     
 }
 
-// KOLEJKA
-// dodaj element do kolejki
-void enqueue(node *&Q, node *&T, int x)
-{
-    node *p = new node;
-    p->val=x;
-    p->next=NULL;
-    if(Q==NULL)
-    {
-        Q=T=p;
-    }
-    else
-    {
-        T->next=p;
-        T=T->next;
-    }
-}
-
-int main() {
+void example() {
     node* H = NULL;
     
     add(H, 17);
@@ -115,13 +97,4 @@ int main() {
 
     del_x2(H, 12);
     show(H);
-
-    // KOLEJKA
-    node* Q=NULL;
-    node* T=NULL;
-    
-    enqueue(Q,T,10);
-    enqueue(Q,T,7);
-    
-    return 0;
 }
