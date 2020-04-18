@@ -20,11 +20,11 @@ void Stack::push() {
     stack = ptr;
 };
 
-void Stack::pop() {
+Stack*::pop() {
     if (stack != NULL) {
         stack *ptr = stack;
         stack = ptr->next;
-        delete ptr;
+        return ptr;
     }
 };
 

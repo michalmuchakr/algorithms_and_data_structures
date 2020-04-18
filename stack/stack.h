@@ -2,8 +2,8 @@
 // Created by michal on 29.03.2020.
 //
 
-#ifndef LABORATORIES_STACK_H
-#define LABORATORIES_STACK_H
+#ifndef STACK_H
+#define STACK_H
 
 class Stack {
 public:
@@ -11,9 +11,9 @@ public:
     Stack();
 
     void push();
-    void pop();
+    stack* pop();
     void isEmpty();
     void top();
 };
 
-#endif //LABORATORIES_STACK_H
+#endif //STACK_H
