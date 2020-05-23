@@ -2,20 +2,14 @@
 
 using namespace std;
 
+/****************************
+ *          BASE            *
+ ****************************/
 struct node {
     int val;
     node * next;
 };
 
-// addOnHead element to list
-void addOnHead(node*& H, int x) {
-    node* p = new node;
-    p->val = x;
-    p->next = H;
-    H = p;
-}
-
-// display list
 void show(node *H) {
     node* p = H;
     cout << "Head->";
@@ -27,6 +21,45 @@ void show(node *H) {
     cout << "NULL" << endl;
 }
 
+node *createListFromArray(int *tab, int tabLength) {
+    node *H = NULL;
+
+    for (int i = tabLength - 1; i >= 0; i--) {
+        addOnHead(H, tab[i]);
+    }
+
+    return H;
+}
+
+/****************************
+ *           ADD            *
+ ****************************/
+
+void addOnHead(node*& H, int x) {
+    node* p = new node;
+    p->val = x;
+    p->next = H;
+    H = p;
+}
+
+void addValueBeforePointer(node*& pointerBefore, int x) {
+    node* p = new node;
+    p->val = x;
+    p->next = pointerBefore->next;
+    pointerBefore->next = p;
+}
+
+void addAfterItemPtr(node*& item, int x) {
+    node* p = new node;
+    p->next = item->next;
+    p->val = x;
+    item->next = p;
+}
+
+/****************************
+ *          DELETE          *
+ ****************************/
+
 void deleteOnHead(node *&H) {
     if (H != NULL) {
         node *p = H;
@@ -35,7 +68,6 @@ void deleteOnHead(node *&H) {
     }
 };
 
-// remove element from list, after item pointer
 void deleteItemAfterPtr(node*& item)
 {
     if (item != NULL)
@@ -89,54 +121,355 @@ void deleteFromListByValue(node *& H, int toDel)
     }
 }
 
-// remove element from list by value
-void del_x2(node*& H, int toDel) {
-    if (H != NULL)
-    {
-        if (H->val == toDel){
-            deleteItemAfterPtr(H);
-        }
-        else
-        {
-            node*p = H;
-            while (p->next != NULL && p->next->val != toDel)
-                p = p->next;
+void deleteByVal(node *&H, int toCheck) {
+    if (H == NULL) {
+        return;
+    }
 
-            if (p->next != NULL)
-                deleteItemAfterPtr(p->next);
+    addOnHead(H, 1);
+
+    node *p = H;
+    while (p->next->val != toCheck && p->next != NULL)
+        p = p->next;
+
+    if (p->next->val == toCheck) {
+        deleteItemAfterPtr(p);
+    }
+
+    deleteOnHead(H);
+}
+
+void deleteEvalNum(node *&H)
+
+void deleteItemsBetween(node *&H, int x, int y) {
+    if (H == NULL || H->next == NULL || H->next->next == NULL) {
+        return;
+    }
+
+    // add guard
+    addOnHead(H, 1);
+
+    node *p = H;
+    // search for x
+    while (p->next != NULL && p->next->val != x) {
+        p = p->next;
+    }
+
+    if (p->next->val != x) {
+        return;
+    }
+
+    node *X = p->next;
+
+    // search for y
+    while (p->next->val != y && p->next != NULL) {
+        p = p->next;
+    }
+
+    if (p->next->val != y) {
+        return;
+    }
+
+    node *Y = p->next;
+
+    while (X->next != Y) {
+        deleteItemAfterPtr(X);
+    }
+
+    //remove guard
+    deleteOnHead(H);
+}
+
+/****************************
+ *       MOVE & REPLACE     *
+ ****************************/
+void replaceFirstWithLast(node *&H) {
+    if (H == NULL && H->next == NULL) {
+        return;
+    }
+
+    if (H->next->next == NULL) {
+        node* tail = H->next;
+        tail->next = H;
+        H = tail;
+        tail->next->next = NULL;
+        return;
+    }
+
+    node *before_tail = H;
+
+    while (before_tail->next->next != NULL) {
+        before_tail = before_tail->next;
+    }
+
+    node *tail = before_tail->next;
+    before_tail->next->next = H->next;
+    before_tail->next = H;
+    before_tail->next->next = NULL;
+    H = tail;
+}
+
+void moveItemsInPairs(node *&ptrBeforePair) {
+    node *x1 = ptrBeforePair->next;
+    ptrBeforePair->next = ptrBeforePair->next->next;
+    x1->next = ptrBeforePair->next->next;
+    ptrBeforePair->next->next = x1;
+}
+
+void replaceItemsAfterPointers(node *&ptrBeforeOne, node *&ptrBeforeTwo) {
+    if (ptrBeforeOne->next != ptrBeforeTwo) {
+        node *tmp1 =  ptrBeforeOne->next;
+        node *tmp2 =  ptrBeforeTwo->next;
+        node *tmp3 =  ptrBeforeTwo->next->next;
+
+        ptrBeforeTwo->next->next = ptrBeforeOne->next->next;
+        ptrBeforeTwo->next = ptrBeforeOne->next;
+        ptrBeforeTwo->next->next = tmp3;
+        ptrBeforeOne->next = tmp2;
+
+        return;
+    }
+
+    moveItemsInPairs(ptrBeforeOne);
+}
+
+void moveMaxToHead(node *&H) {
+    if (H == NULL || H->next == NULL) {
+        return;
+    }
+
+    // add guard
+//    addOnHead(H, -1);
+
+    node *before_max = H;
+    node *ptr = H;
+
+    while (ptr->next->next != NULL) {
+        if (before_max->next->val < ptr->next->val ) {
+            before_max = ptr;
         }
+        ptr = ptr->next;
+    }
+
+    // check last element
+    if (before_max->next->val < ptr->next->val ) {
+        before_max = ptr;
+    }
+
+    // remove guards
+//    deleteOnHead(H);
+
+    if (before_max->next->val > H->val) {
+        node* max = before_max->next;
+
+        before_max->next = before_max->next->next;
+        max->next = H;
+        H = max;
     }
 }
 
-void addBefore(node*& item, int x) {
-    node* p = new node;
-    p->val = x;
-    p->next = item -> next;
-    item->next = p;
+void moveItemAfterPtrToHeadOfDestinyList(node *&ptrBefore, node *&destinyList) {
+    if (ptrBefore == NULL && ptrBefore->next == NULL) {
+        return;
+    }
+
+    if (destinyList == NULL) {
+        destinyList = ptrBefore->next;
+        ptrBefore->next = ptrBefore->next->next;
+        destinyList->next = NULL;
+    } else {
+        node *ptr = ptrBefore->next;
+        ptrBefore->next = ptrBefore->next->next;
+        node *ptr2 = destinyList;
+        destinyList = ptr;
+        destinyList->next = ptr2;
+    }
 }
 
-void deleteEvalNum(node *&H) {
-    if (H != NULL) {
-        addOnHead(H, 1);
+void moveItemAfterTail(node *ptrBefore, node *tail) {
+    if (ptrBefore->next == tail) {
+        moveItemsInPairs(ptrBefore);
+        return;
+    }
 
-        node *p = H;
-        node *p1 = p->next;
+    node *x =  ptrBefore->next;
 
-        while(p1->next != NULL) {
-            if (p1->val % 2 == 0) {
-                deleteItemAfterPtr(p1);
+    ptrBefore->next = x->next;
+    x->next = tail->next;
+    tail->next = x;
+}
+
+void changeNextTwoItemOrder(node *&ptrBefore) {
+    node *x1 = ptrBefore->next;
+    node *x2 = x1->next;
+    x1->next = x2->next;
+    ptrBefore->next = x2;
+    x2->next = x1;
+};
+
+void changeTwoItemsOrder(node *&ptrBefore1, node *&ptrBefore2) {
+    node *x1 = ptrBefore1->next;
+
+    ptrBefore1->next = ptrBefore2->next;
+    ptrBefore2->next = x1;
+
+    node *tmp = x1->next;
+    x1->next = ptrBefore1->next->next;
+    ptrBefore1->next->next = tmp;
+}
+
+void moveGraterThanAverageAfterTail(node *&H) {
+    node* p = H;
+    int amountOfElements = 0;
+    double sum = 0;
+
+    while (p->next != NULL) {
+        amountOfElements++;
+        sum += p->val;
+        p = p->next;
+    }
+
+    // add last item
+    amountOfElements++;
+    sum += p->val;
+
+    double average = sum / amountOfElements;
+
+    node *currentTail = p;
+    node *baseTail = p;
+
+    // add guard
+    addOnHead(H, 0);
+    p = H;
+
+    // Head->4->4->2->6->NULL
+    //            |p| |
+    while (p->next != baseTail) {
+        if (p->next->val > average) {
+            moveItemAfterTail(p, currentTail);
+            currentTail = currentTail->next;
+        }
+        p = p->next;
+    }
+
+    // check if baseTail should be moved after currentTail
+    if (p->next->val > average) {
+        moveItemAfterTail(p, currentTail);
+        currentTail = currentTail->next;
+    }
+
+    // remove guard
+    deleteOnHead(H);
+}
+
+/****************************
+ *           FIND           *
+ ****************************/
+node *findTailOnList(node *&H) {
+    if (H == NULL || H->next == NULL) {
+        return H;
+    }
+
+    node *p = H;
+
+    while (p->next != NULL) {
+        p = p->next;
+    }
+
+    return p;
+};
+
+/****************************
+ *  VARIATIONS & EXERCISES  *
+ ****************************/
+// move max to Head
+void sortList(node *&H) {
+    if (H == NULL || H->next == NULL) {
+        return;
+    }
+
+    // add guard
+    addOnHead(H, -1);
+    node *guard = H;
+
+    while (guard->next != NULL) {
+        node *before_max = guard;
+        node *ptr = guard;
+
+        while (ptr->next->next != NULL) {
+            if (before_max->next->val < ptr->next->val ) {
+                before_max = ptr;
             }
-
-            p1 = p1->next;
-            p = p->next;
+            ptr = ptr->next;
         }
 
-        if (p1->val % 2 == 0) {
-            deleteItemAfterPtr(p);
+        // check last element
+        if (before_max->next->val < ptr->next->val ) {
+            before_max = ptr;
         }
 
-        deleteItemAfterPtr(H);
+        node* max = before_max->next;
+
+        before_max->next = before_max->next->next;
+        max->next = H;
+        H = max;
     }
+
+    deleteOnTail(H);
+}
+
+void copyOnEndRevertedList(node *&H) {
+    if (H == NULL || H->next == NULL) {
+        return;
+    }
+
+    node *stack = NULL;
+    node *ptr = H;
+
+    while (ptr->next != NULL) {
+        addOnHead(stack, ptr->val);
+        ptr = ptr->next;
+    }
+
+    // copy last element
+    addAfterItemPtr(ptr, ptr->val);
+
+    // ptr will points to tail
+    ptr = ptr->next;
+
+    while (stack != NULL) {
+        node *toInsert = getNodeFromStack(stack);
+        ptr->next = toInsert;
+        toInsert->next = NULL;
+        ptr = ptr->next;
+    }
+}
+
+bool isFibonacciMember(int toCheck) {
+    if (toCheck == 1 || toCheck == 0) {
+        return true;
+    }
+
+    int x = 0;
+    int y = 1;
+    int z = 1;
+
+    while (z <=  toCheck) {
+        if (z == toCheck) {
+            return true;
+        }
+        x = y;
+        y = z;
+        z = x + y;
+    }
+
+    return false;
+}
+
+node* joinLists(node *& listOne, node *& listTwo) {
+    node *tail = findTailOnList(listOne);
+    tail->next = listTwo;
+    return listOne;
 }
 
 void addInSortedWay(node*& H, int toInsert) {
@@ -149,45 +482,6 @@ void addInSortedWay(node*& H, int toInsert) {
             p = p->next;
 
         addBefore(p, toInsert);
-    }
-}
-
-void addAfterPtr(node*& item, int x) {
-    node* p = new node;
-    p->next = NULL;
-    p->val = x;
-    item->next = p;
-}
-
-void deleteFromListBetween(node *&H, int x, int y) {
-    // check if more than two elements in list
-    if (H == NULL || H->next != NULL || H->next->next == NULL) {
-        return;
-    }
-
-    node *p = H;
-
-    // check if found x, or if there p points to second node before NULL
-    while (p->val != x && p->next->next != NULL)
-        p = p->next;
-
-    // x found
-    if (p->val != x) {
-        return;
-    }
-
-    node *q = p;
-
-    // check if y exists
-    while (q->val != y && q->next != NULL) {
-        q = q->next;
-    }
-
-    // y found
-    if (q->val == y) {
-        while (p->next != q) {
-            deleteItemAfterPtr(p);
-        }
     }
 }
 
@@ -235,209 +529,4 @@ void moveAfterTailFromListBetween(node *&H, int x, int y) {
         p->next = p->next->next;
         t->next = NULL;
     }
-}
-
-void replaceFirstWithLast(node *&H) {
-    if (H != NULL && H->next != NULL) {
-        if (H->next->next == NULL) {
-            node* tail = H->next;
-            tail->next = H;
-            H = tail;
-            tail->next->next = NULL;
-            return;
-        }
-
-        node *before_tail = H;
-
-        while (before_tail->next->next != NULL) {
-            before_tail = before_tail->next;
-        }
-
-        node *tail = before_tail->next;
-        before_tail->next->next = H->next;
-        before_tail->next = H;
-        before_tail->next->next = NULL;
-        H = tail;
-    }
-}
-
-
-void moveMaxToHead(node *&H) {
-    if (H == NULL || H->next == NULL) {
-        return;
-    }
-
-    // add guard
-//    addOnHead(H, -1);
-
-    node *before_max = H;
-    node *ptr = H;
-
-    while (ptr->next->next != NULL) {
-        if (before_max->next->val < ptr->next->val ) {
-            before_max = ptr;
-        }
-        ptr = ptr->next;
-    }
-
-    // check last element
-    if (before_max->next->val < ptr->next->val ) {
-        before_max = ptr;
-    }
-
-    // remove guards
-//    deleteOnHead(H);
-
-    if (before_max->next->val > H->val) {
-        node* max = before_max->next;
-
-        before_max->next = before_max->next->next;
-        max->next = H;
-        H = max;
-    }
-}
-
-// move max to Head
-void sortList(node *&H) {
-    if (H == NULL || H->next == NULL) {
-        return;
-    }
-
-    // add guard
-    addOnHead(H, -1);
-    node *guard = H;
-
-    while (guard->next != NULL) {
-        node *before_max = guard;
-        node *ptr = guard;
-
-        while (ptr->next->next != NULL) {
-            if (before_max->next->val < ptr->next->val ) {
-                before_max = ptr;
-            }
-            ptr = ptr->next;
-        }
-
-        // check last element
-        if (before_max->next->val < ptr->next->val ) {
-            before_max = ptr;
-        }
-
-        node* max = before_max->next;
-
-        before_max->next = before_max->next->next;
-        max->next = H;
-        H = max;
-    }
-
-    deleteOnTail(H);
-}
-
-node * getNodeFromStack(node *&H) {
-    if (H != NULL) {
-        node *p = H;
-        H = H->next;
-        return p;
-    }
-}
-
-void addAfterItemPtr(node*& item, int x) {
-    node* p = new node;
-    p->next = NULL;
-    p->val = x;
-    item->next = p;
-}
-
-void deleteByValue(node *&H, int toDelete) {
-    if (H != NULL) {
-        if (H->val == toDelete) {
-            deleteOnHead(H);
-        } else {
-            node *p = H;
-
-            while (p->next->val != toDelete && p->next != NULL)
-                p = p->next;
-
-            if (p->next->val == toDelete) {
-                deleteItemAfterPtr(p);
-            }
-        }
-    }
-};
-
-void copyOnEndRevertedList(node *&H) {
-    if (H == NULL || H->next == NULL) {
-        return;
-    }
-
-    node *stack = NULL;
-    node *ptr = H;
-
-    while (ptr->next != NULL) {
-        addOnHead(stack, ptr->val);
-        ptr = ptr->next;
-    }
-
-    // copy last element
-    addAfterItemPtr(ptr, ptr->val);
-
-    // ptr will points to tail
-    ptr = ptr->next;
-
-    while (stack != NULL) {
-        node *toInsert = getNodeFromStack(stack);
-        ptr->next = toInsert;
-        toInsert->next = NULL;
-        ptr = ptr->next;
-    }
-}
-
-node *createListFromArray(int *tab, int tabLength) {
-    node *H = NULL;
-
-    for (int i = tabLength - 1; i >= 0; i--) {
-        addOnHead(H, tab[i]);
-    }
-
-    return H;
-}
-
-
-int main() {
-    int tab[1] = {5};
-
-
-    return 0;
-}
-
-
-void example() {
-    node *H = NULL;
-
-    addOnHead(H, 12);
-    addOnHead(H, 5);
-    addOnHead(H, 3);
-    addOnHead(H, 6);
-    addOnHead(H, 10);
-
-    show(H);
-
-    deleteEvalNum(H);
-
-    show(H);
-
-    cout << "zadanie 2" << endl;
-
-    node *H1 = NULL;
-
-    addSorted(H1, 1);
-    addSorted(H1, 0);
-    addSorted(H1, 12);
-    addSorted(H1, 24);
-    addSorted(H1, 7);
-    addSorted(H1, 13);
-
-    show(H1);
-
-    return 0;
 }
