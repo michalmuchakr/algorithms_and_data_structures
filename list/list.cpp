@@ -70,19 +70,14 @@ void deleteOnHead(node *&H) {
 
 void deleteItemAfterPtr(node*& item)
 {
-    if (item != NULL)
-    {
-        // set pointer to item
-        node *p = item;
-
-        node *p1 = p->next;
-
-        // move next pointer of pointed item to ->next->next
-        p->next = p->next->next;
-
-        // delete item
-        delete p1;
+    if (item == NULL) {
+        return;
     }
+
+    node *p = item;
+    node *p1 = p->next;
+    p->next = p->next->next;
+    delete p1;
 }
 
 void deleteOnTail(node*& H)
@@ -98,26 +93,27 @@ void deleteOnTail(node*& H)
 
 void deleteFromListByValue(node *& H, int toDel)
 {
-    if (H != NULL)
+    if (H == NULL) {
+        return;
+    }
+
+    node*p = H;
+
+    if (H->val == toDel)
     {
-        node*p = H;
+        H = p->next;
+        delete p;
+        return;
+    }
 
-        if (H->val == toDel)
-        {
-            H = p->next;
-            delete p;
-        }
-        else
-        {
-            while (p -> next != NULL && p->next->val != toDel)
-                p = p -> next;
+    while (p -> next != NULL && p->next->val != toDel) {
+        p = p -> next;
+    }
 
-            if (p -> next != NULL) {
-                node* p1 = p->next;
-                p->next = p1->next;
-                delete p1;
-            }
-        }
+    if (p -> next != NULL) {
+        node* p1 = p->next;
+        p->next = p1->next;
+        delete p1;
     }
 }
 
@@ -138,8 +134,6 @@ void deleteByVal(node *&H, int toCheck) {
 
     deleteOnHead(H);
 }
-
-void deleteEvalNum(node *&H)
 
 void deleteItemsBetween(node *&H, int x, int y) {
     if (H == NULL || H->next == NULL || H->next->next == NULL) {
@@ -184,7 +178,7 @@ void deleteItemsBetween(node *&H, int x, int y) {
  *       MOVE & REPLACE     *
  ****************************/
 void replaceFirstWithLast(node *&H) {
-    if (H == NULL && H->next == NULL) {
+    if (H == NULL || H->next == NULL) {
         return;
     }
 
@@ -238,9 +232,6 @@ void moveMaxToHead(node *&H) {
         return;
     }
 
-    // add guard
-//    addOnHead(H, -1);
-
     node *before_max = H;
     node *ptr = H;
 
@@ -256,9 +247,6 @@ void moveMaxToHead(node *&H) {
         before_max = ptr;
     }
 
-    // remove guards
-//    deleteOnHead(H);
-
     if (before_max->next->val > H->val) {
         node* max = before_max->next;
 
@@ -269,7 +257,7 @@ void moveMaxToHead(node *&H) {
 }
 
 void moveItemAfterPtrToHeadOfDestinyList(node *&ptrBefore, node *&destinyList) {
-    if (ptrBefore == NULL && ptrBefore->next == NULL) {
+    if (ptrBefore == NULL || ptrBefore->next == NULL) {
         return;
     }
 
@@ -415,7 +403,8 @@ void sortList(node *&H) {
         H = max;
     }
 
-    deleteOnTail(H);
+    //remove guard
+    deleteOnHead(H);
 }
 
 void copyOnEndRevertedList(node *&H) {
