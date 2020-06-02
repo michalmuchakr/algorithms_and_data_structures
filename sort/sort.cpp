@@ -24,8 +24,7 @@ void deleteOnHead(node *&H) {
 void show(node *H) {
     node* p = H;
     cout << "Head->";
-    while (p != NULL)
-    {
+    while (p != NULL) {
         cout << p->val << "->";
         p = p->next;
     }
@@ -94,6 +93,9 @@ void joinArrays(node *&H, node *&H1, node *&H2) {
         H1 = NULL;
     }
 
+    delete H1;
+    delete H2;
+
     //remove guard
     deleteOnHead(H);
 }
@@ -112,4 +114,28 @@ void mergeSort(node *&H) {
     mergeSort(H2);
 
     joinArrays(H, H1, H2);
+}
+
+void bubbleSort(node *H) {
+    if (H == NULL || H->next == NULL) {
+        return;
+    }
+
+    int size = getSizeOfList(H);
+
+    // guard
+    addOnHead(H, 0);
+
+    for (int i=0; i<size-1; i++) {
+        node *p = H;
+        while (p->next != NULL && p->next->next != NULL) {
+            if (p->next->val > p->next->next->val) {
+                moveItemsInPairs(p);
+            }
+            p = p->next;
+        }
+    }
+
+    // guard
+    deleteOnHead(H);
 }

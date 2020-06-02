@@ -91,6 +91,31 @@ void deleteLevies(node *&root) {
     }
 }
 
+void findMaxNode(node *root, node *& max) {
+    if (root == NULL) {
+        return;
+    }
+
+
+    if (root->right != NULL) {
+        findMaxNode(root->right, max);
+    } else {
+        max = root;
+    }
+}
+
+void findMinNode(node *root, node *& min) {
+    if (root == NULL) {
+        return;
+    }
+
+    if (root->left != NULL) {
+        findMinNode(root->left, min);
+    } else {
+        min = root;
+    }
+}
+
 int main() {
     node *tree = NULL;
 
@@ -105,11 +130,7 @@ int main() {
     addBstNode(tree, 10);
     addBstNode(tree, 27);
 
-    showInOrder(tree);
-    cout << endl;
-
-    deleteLevies(tree);
-
-    showInOrder(tree);
+    node *min = NULL;
+    findMinNode(tree, min);
     return 0;
 }
