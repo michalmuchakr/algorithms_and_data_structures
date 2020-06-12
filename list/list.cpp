@@ -368,6 +368,23 @@ node *findTailOnList(node *&H) {
 };
 
 /****************************
+ *            GET           *
+ ****************************/
+
+int getSizeOfList(node *H) {
+    int size = 0;
+    node *p = H;
+
+    while (p != NULL) {
+        size = size + 1;
+        p = p->next;
+    }
+
+    return size;
+}
+
+
+/****************************
  *  VARIATIONS & EXERCISES  *
  ****************************/
 // move max to Head

@@ -1,54 +1,46 @@
-//
-// Created by michal on 17.05.2020.
-//
-
 #include <iostream>
+#include <fstream>
+#include <string>
+
 using namespace std;
 
-struct node {
-    int val;
-    node * next;
-};
-
-// display list
-void show(node *H) {
-    node* p = H;
-    cout << "Head->";
-    while (p != NULL)
-    {
-        cout << p->val << "->";
-        p = p->next;
-    }
-    cout << "NULL" << endl;
-}
-
-// addOnHead element to list
-void addOnHead(node*& H, int x) {
-    node* p = new node;
-    p->val = x;
-    p->next = H;
-    H = p;
-}
-
-node *createListFromArray(int *tab, int tabLength) {
-    node *H = NULL;
-
-    for (int i = tabLength - 1; i >= 0; i--) {
-        addOnHead(H, tab[i]);
-    }
-
-    return H;
-}
-
 int main() {
-    int tab[5] = {0, 8, 1, 1, 2};
-    node *H = createListFromArray(tab, 5);
+//    ifstream file("/home/michal/Work/studies/4_term/AISD/laboratory/graph.txt");
+//    string line;
+    int size;
+//
+//    while (getline(file, line)) {
+//        cout << line << endl;
+//    }
 
-    show(H);
+    cout << "===========================" << endl;
+
+    fstream read;
+    read.open("graph.txt");
+    read >> size;
+
+    int **M = new int *[size];
+
+    for (int i = 0; i < size; i++) {
+        M[i] = new int[size];
+    }
+
+    for (int i = 0; i < size; i++)
+        for (int j = 0; j < size; j++)
+            read >> M[i][j];
 
 
-
-    show(H);
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            cout << M[i][j] << " ";
+        }
+        cout << endl;
+    }
 
     return 0;
 }
+
+// Implementacja Algorytmu Kruskala,
+// Odczytanie listy sąsiedztwa z pliku tekstowego(implementacja wskaźnikowa) - (w pliku mamy macierz sąsiedztwa);
+// Utworzenie listy jednostronnie wiązanej posortowanych krawędzi,
+// Realizacja algorytmu opartego o tablicy kolorów oraz lasów.
