@@ -1,7 +1,3 @@
-//
-// Created by michal on 29.03.2020.
-//
-
 #include "stack.h"
 
 Stack::stack {
@@ -21,11 +17,9 @@ void Stack::push() {
 };
 
 Stack*::pop() {
-    if (stack != NULL) {
-        stack *ptr = stack;
-        stack = ptr->next;
-        return ptr;
-    }
+    stack *ptr = stack;
+    stack = ptr->next;
+    return ptr;
 };
 
 void Stack::isEmpty() {
